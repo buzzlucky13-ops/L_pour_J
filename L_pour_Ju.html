@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L_pour_Ju 🦋</title>
+<style>
+  :root{
+    --bg1:#fff8fc; --bg2:#f5efff; --ink:#4b3b4f; --pink:#f29ac2;
+    --pink2:#ffd1e5; --purple:#9d83d4; --white:#fff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; overflow:hidden; color:var(--ink);
+    font-family: ui-rounded, "Trebuchet MS", system-ui, sans-serif;
+    background:radial-gradient(circle at 20% 10%,#fff 0 12%,transparent 32%),
+               linear-gradient(135deg,var(--bg1),var(--bg2));
+  }
+  .page{
+    position:absolute; inset:0; display:none; place-items:center;
+    padding:28px; text-align:center;
+  }
+  .page.active{display:grid; animation:fade .65s ease}
+  .card{
+    width:min(720px,94vw); max-height:90vh; overflow:auto;
+    padding:42px 30px; border:1px solid rgba(255,255,255,.8);
+    border-radius:32px; background:rgba(255,255,255,.72);
+    backdrop-filter:blur(10px); box-shadow:0 20px 60px rgba(91,65,111,.14);
+  }
+  h1{font-size:clamp(2rem,6vw,4rem); margin:.1em 0 .45em}
+  p{font-size:clamp(1.05rem,2.8vw,1.35rem); line-height:1.65; margin:0 auto 28px; max-width:650px}
+  .buttons{display:flex; justify-content:center; gap:16px; flex-wrap:wrap}
+  #p7 .card{display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:min(78vh,760px);}
+  #p7 .buttons{width:100%; flex-wrap:nowrap; margin-top:clamp(20px,5vh,55px) !important;}
+  #p7 #finalNo{position:fixed; z-index:50;}
+  @media (max-height:600px){
+    .card{min-height:calc(100vh - 24px); padding-top:18px; padding-bottom:18px;}
+    #p7 .card{min-height:calc(100vh - 24px);}
+    h1{font-size:clamp(1.6rem,5vw,3rem);}
+    p{line-height:1.35; margin-bottom:16px;}
+  }
+  button{
+    border:0; cursor:pointer; padding:14px 25px; border-radius:999px;
+    font:inherit; font-weight:800; color:var(--ink); background:white;
+    box-shadow:0 8px 22px rgba(80,50,90,.12); transition:.2s;
+  }
+  button:hover{transform:translateY(-2px) scale(1.02)}
+  .yes{background:var(--pink2)}
+  .hidden-message{
+    min-height:34px; margin-top:16px; font-weight:900; color:#d86c9d;
+    animation:pop .25s ease;
+  }
+  .tiny{font-size:.95rem}
+  #readyWarning{
+    min-height:1.2em;
+    margin-bottom:8px;
+    font-weight:1000;
+    color:#d86c9d;
+    font-size:1.6rem;
+    visibility:hidden;
+    transition:font-size .25s ease, transform .25s ease;
+  }
+  #drums{
+    font-size:clamp(1.8rem,5vw,3.2rem); line-height:1.5; margin-bottom:10px;
+    word-break:break-word;
+  }
+  .drum-only{animation:drumBounce .55s ease-in-out infinite alternate; display:inline-block}
+  @keyframes drumBounce{from{transform:translateY(0) rotate(-4deg)}to{transform:translateY(-8px) rotate(4deg)}}
+  .eh{
+    position:fixed; z-index:20; pointer-events:none; font-weight:1000;
+    color:#e36a9d; transform:translate(-50%,-50%); font-size:24px;
+    transition:left .16s ease,top .16s ease,font-size .2s ease;
+  }
+  .butterfly{position:fixed; z-index:2; pointer-events:none; font-size:26px; filter:drop-shadow(0 4px 4px rgba(80,40,90,.12));}
+  .sig{font-family:cursive; font-size:2.2rem; margin-top:44px}
+  .heart{color:#e77aa9}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+  @keyframes float{
+    0%{transform:translate(0,0) rotate(-8deg)}
+    25%{transform:translate(70px,-45px) rotate(12deg)}
+    50%{transform:translate(10px,-90px) rotate(-5deg)}
+    75%{transform:translate(-65px,-35px) rotate(10deg)}
+    100%{transform:translate(0,0) rotate(-8deg)}
+  }
+</style>
+</head>
+<body>
+
+<div id="butterflies"></div>
+
+<section class="page active" id="p1">
+  <div class="card">
+    <h1>Salut Toi ! 🦋</h1>
+    <p>Je suis content de passer ce genre de moment avec toi<br>
+    (t’as vu y’a des papillons là aussi — T’AS VU C’EST ROSE) 🦋<br><br>
+    T’aimes bien ?</p>
+    <div class="buttons">
+      <button id="no1">Non</button>
+      <button class="yes" onclick="next(2)">Oui</button>
+    </div>
+    <div class="hidden-message" id="msg1"></div>
+  </div>
+</section>
+
+<section class="page" id="p2">
+  <div class="card">
+    <p>Tu sais, j’aime beaucoup ce genre de moments qu’on a ensemble et ce que tu m’apportes de manière générale quand on est ensemble, je me sens bien. ❤️</p>
+    <div class="buttons">
+      <button id="abr">Abreges chef</button>
+      <button class="yes" onclick="nice()">Moi aussi j’aime bien</button>
+    </div>
+    <div class="hidden-message" id="msg2"></div>
+  </div>
+</section>
+
+<section class="page" id="p3">
+  <div class="card">
+    <p><strong>Est-ce que tu serais partante pour qu’on continue à se découvrir ?</strong></p>
+    <div class="buttons">
+      <button class="yes" onclick="next(4)">Évidemment</button>
+      <button class="yes" id="mysteryBtn">Je commence à me demander où tu veux en venir 👀</button>
+    </div>
+    <div class="hidden-message" id="msg3"></div>
+  </div>
+</section>
+
+<section class="page" id="p4">
+  <div class="card">
+    <p><strong>Et si je te proposais de passer au niveau supérieur… tu dirais quoi ?</strong></p>
+    <p class="tiny">…</p>
+    <button class="yes" onclick="next(5)">J’écoute 👀</button>
+  </div>
+</section>
+
+<section class="page" id="p5">
+  <div class="card">
+    <p>Bon… je crois que tu as compris mais j’ai aussi peur parce que je ne veux pas te presser, je veux toujours que tu sois heureuse (et ça changera pas...).</p>
+    <p>Mais j’ai quand même envie de te le demander correctement.</p>
+    <button class="yes" onclick="next(6)">Continuer ❤️</button>
+  </div>
+</section>
+
+<section class="page" id="p6">
+  <div class="card">
+    <div id="readyWarning">T’es sûre ?</div>
+    <div id="drums" aria-hidden="true"></div>
+    <h1>🥁 🥁 🥁 🥁 🥁</h1>
+    <p><strong>Petit moment de suspense...</strong></p>
+    <button class="yes" id="readyBtn">Je suis prête (clique pas si tu l’es pas...)</button>
+  </div>
+</section>
+
+<section class="page" id="p7">
+  <div class="card">
+    <h1>Est-ce que tu veux être ma copine ? ❤️</h1>
+    <div class="buttons" style="margin-top:35px">
+      <button class="yes" onclick="next(8)">OUI 🥰</button>
+      <button id="finalNo">NON.</button>
+    </div>
+    <div class="hidden-message" id="msg6"></div>
+  </div>
+</section>
+
+<section class="page" id="p8">
+  <div class="card">
+    <h1>COOOOOL 😭❤️</h1>
+    <p>Parce que je te kiffe trop donc ça m’aurait fait chier 😂</p>
+    <div class="sig">L <span class="heart">♥</span></div>
+  </div>
+</section>
+
+<script>
+const pages=[...document.querySelectorAll('.page')];
+function next(n){
+  pages.forEach(p=>p.classList.remove('active'));
+  document.getElementById('p'+n).classList.add('active');
+  if(n===8){
+    const eh=document.getElementById('eh');
+    if(eh) eh.remove();
+  }
+}
+
+const msg1=document.getElementById('msg1');
+document.getElementById('no1').addEventListener('click',()=>{
+  msg1.textContent='DOSE';
+  msg1.style.fontSize='1.7rem';
+  document.getElementById('no1').style.opacity='.75';
+  document.querySelector('#p1 .yes').animate(
+    [{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],
+    {duration:500}
+  );
+});
+
+function nice(){
+  const m=document.getElementById('msg2');
+  m.textContent='JE SAIS 👀';
+  m.style.fontSize='1.8rem';
+  setTimeout(()=>next(3),2000);
+}
+
+document.getElementById('abr').addEventListener('click',()=>{
+  const m=document.getElementById('msg2');
+  m.textContent='DOSE CA Y EST';
+  m.style.fontSize='1.7rem';
+});
+
+// La page de la grande demande garde toujours la zone visible : le NON
+// se déplace uniquement à l'intérieur de la fenêtre, sans provoquer de scroll.
+const no=document.getElementById('finalNo');
+let attempts=0;
+
+function placeFinalNo(){
+  // NON se balade dans toute la zone de la boîte, tout en restant proche de OUI.
+  const card = document.querySelector('#p7 .card');
+  const yes = document.querySelector('#p7 .yes');
+  if(!card || !yes) return;
+
+  const cardRect = card.getBoundingClientRect();
+  const yesRect = yes.getBoundingClientRect();
+  const noRect = no.getBoundingClientRect();
+
+  const pad = 24;
+  const minX = cardRect.left + pad;
+  const maxX = cardRect.right - noRect.width - pad;
+  const minY = cardRect.top + 80;
+  const maxY = cardRect.bottom - noRect.height - 28;
+
+  // Choix aléatoire dans toute la boîte, puis léger rapprochement vers OUI.
+  let x = minX + Math.random() * Math.max(1, maxX - minX);
+  let y = minY + Math.random() * Math.max(1, maxY - minY);
+
+  const yesCenterX = yesRect.left + yesRect.width / 2;
+  const yesCenterY = yesRect.top + yesRect.height / 2;
+  const noCenterX = x + noRect.width / 2;
+  const noCenterY = y + noRect.height / 2;
+
+  x += (yesCenterX - noCenterX) * 0.35;
+  y += (yesCenterY - noCenterY) * 0.35;
+
+  x = Math.max(minX, Math.min(maxX, x));
+  y = Math.max(minY, Math.min(maxY, y));
+
+  no.style.left = x + 'px';
+  no.style.top = y + 'px';
+}
+
+function dodge(){
+  attempts++;
+  placeFinalNo();
+}
+
+no.addEventListener('mouseenter',dodge);
+no.addEventListener('pointerdown',(e)=>{e.preventDefault(); dodge();});
+no.addEventListener('touchstart',(e)=>{e.preventDefault(); dodge();},{passive:false});
+window.addEventListener('resize',()=>{
+  if(document.getElementById('p7').classList.contains('active')) placeFinalNo();
+});
+
+// Le bouton mystérieux ne permet pas d'avancer : il affiche simplement le message.
+document.getElementById('mysteryBtn').addEventListener('click',()=>{
+  const m=document.getElementById('msg3');
+  m.textContent='aucune idée... clique sur l’autre case (consentement oblige)';
+  m.style.fontSize='1.2rem';
+});
+
+// Génère les tambours uniquement sur la page dédiée.
+const drums=document.getElementById('drums');
+if(drums){
+  const drumEmojis=['🥁','🥁','🥁','🥁','🥁','🥁','🥁','🥁','🥁','🥁','🥁','🥁'];
+  drums.innerHTML=drumEmojis.map((d,i)=>`<span class="drum-only" style="animation-delay:${i*45}ms">${d}</span>`).join(' ');
+}
+
+// La page des tambours demande 3 clics avant de continuer.
+const readyBtn = document.getElementById('readyBtn');
+const readyWarning = document.getElementById('readyWarning');
+let readyClicks = 0;
+
+if(readyBtn){
+  readyBtn.addEventListener('click',()=>{
+    readyClicks++;
+
+    if(readyClicks < 3){
+      readyWarning.textContent = 'T’es sûre ?';
+      readyWarning.style.visibility = 'visible';
+      readyWarning.style.fontSize = (1.6 + readyClicks * 0.75) + 'rem';
+      readyWarning.style.transform = `scale(${1 + readyClicks * 0.08})`;
+
+      readyWarning.animate(
+        [{transform:'scale(1)'},{transform:`scale(${1.12 + readyClicks * 0.05})`},{transform:`scale(${1 + readyClicks * 0.08})`}],
+        {duration:450}
+      );
+    } else {
+      readyWarning.textContent = 'Bon… c’est parti 😏';
+      readyWarning.style.fontSize = '3.1rem';
+      readyWarning.animate(
+        [{transform:'scale(1)'},{transform:'scale(1.18)'},{transform:'scale(1)'}],
+        {duration:500}
+      );
+      setTimeout(()=>next(7),550);
+    }
+  });
+}
+
+// Papillons flottants
+const holder=document.getElementById('butterflies');
+for(let i=0;i<18;i++){
+  const b=document.createElement('div');
+  b.className='butterfly';
+  b.textContent='🦋';
+  b.style.left=(Math.random()*100)+'vw';
+  b.style.top=(Math.random()*100)+'vh';
+  b.style.animation=`float ${5+Math.random()*7}s ease-in-out ${-Math.random()*8}s infinite`;
+  b.style.fontSize=(18+Math.random()*20)+'px';
+  b.style.opacity=(.35+Math.random()*.55);
+  holder.appendChild(b);
+}
+</script>
+</body>
+</html>
